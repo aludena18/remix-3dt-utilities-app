@@ -7,8 +7,12 @@ export default function filterData(acceptedFiles) {
     reader.onerror = () => console.log("file reading has failed");
     reader.onload = () => {
       // Do whatever you want with the file contents
-      const binaryStr = reader.result;
-      console.log(binaryStr);
+      const file = reader.result;
+      const allLines = file.split(/\r\n|\n/);
+      // Reading line by line
+      allLines.forEach((line) => {
+        console.log(line);
+      });
     };
     reader.readAsText(file);
   });
