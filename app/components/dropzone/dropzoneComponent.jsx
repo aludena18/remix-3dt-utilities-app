@@ -5,7 +5,7 @@ import filterData from "./filterData";
 
 export default function DropzoneComponent(props) {
   const onDrop = useCallback((acceptedFiles) => {
-    filterData(acceptedFiles);
+    console.log(filterData(acceptedFiles));
   }, []);
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
