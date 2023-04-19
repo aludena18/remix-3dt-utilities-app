@@ -2,14 +2,15 @@ import { Container, TextField } from "@mui/material";
 import TextButton from "./textButton";
 import { useSubmit } from "@remix-run/react";
 
-export default function SimpleForm() {
+export default function SimpleForm(props) {
   const submit = useSubmit();
 
   const submitForm = function (ev) {
     console.log("submitted");
     const formEl = ev.currentTarget.closest("form");
+    console.log(props.data);
     console.log(formEl);
-    submit(formEl, { replace: true });
+    submit(formEl);
   };
 
   return (

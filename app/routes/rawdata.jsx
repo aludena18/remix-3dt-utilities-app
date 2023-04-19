@@ -1,9 +1,7 @@
 import { Grid, Paper } from "@mui/material";
-import DropzoneComponent from "../components/dropzone/dropzoneComponent";
-import SimpleForm from "../components/inputs/simpleForm";
 import { redirect } from "@remix-run/node";
-
-const textData = "";
+import DropzoneForm from "../components/dropzone/dropzoneForm";
+import { setData, getData } from "../data/helpers";
 
 export const meta = () => {
   return [{ title: "Remix 3DT App" }];
@@ -33,15 +31,32 @@ export default function RawdataRoute() {
             height: 250,
           }}
         >
-          <DropzoneComponent />
-          <SimpleForm />
+          <DropzoneForm />
         </Paper>
       </Grid>
     </Grid>
   );
 }
 
-export function action() {
+export async function action({ request }) {
   console.log("Message from the server");
+  const formData = await request.formData();
+
+  // Filter the data
+  const data = formData.get("content");
+  console.log(data);
+
+  // Reading line by line and filter them
+  const allLines = data.split(/\r\n|\n/);
+  const filteredData = allLines.map((line) => line.split(":")[1]);
+  console.log(filteredData);
+  setData(filteredData);
+
+  // Redirect
   return redirect("/rawdata");
+}
+
+export function loader() {
+  console.log("from loader", getData());
+  return null;
 }
