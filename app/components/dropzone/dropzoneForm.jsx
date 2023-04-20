@@ -4,11 +4,12 @@ import { useDropzone } from "react-dropzone";
 import { Box, Container, Typography, TextField } from "@mui/material";
 import TextButton from "../inputs/textButton";
 
-const textData = { content: "" };
+const tempFile = { name: "", content: "" };
 
 export default function DropzoneForm(props) {
-  console.log(props.data);
   const submit = useSubmit();
+  // console.log(props.data);
+
   const onDrop = useCallback((acceptedFiles) => {
     console.log("a file has been drooped");
     acceptedFiles.forEach((file) => {
@@ -18,14 +19,10 @@ export default function DropzoneForm(props) {
       reader.onerror = () => console.log("file reading has failed");
       reader.onload = () => {
         // Do whatever you want with the file contents
-        const file = reader.result;
-        textData.content = file;
-        console.log(textData);
-        const allLines = file.split(/\r\n|\n/);
-        // Reading line by line
-        allLines.forEach((line) => {
-          // console.log(line);
-        });
+        tempFile.name = file.path;
+        tempFile.content = reader.result;
+        console.log(tempFile);
+        submitForm();
       };
       reader.readAsText(file);
     });
@@ -35,7 +32,7 @@ export default function DropzoneForm(props) {
     onDrop,
   });
 
-  const files = acceptedFiles.map((file) => (
+  let files = acceptedFiles.map((file) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
@@ -46,14 +43,22 @@ export default function DropzoneForm(props) {
     const formEl = document.getElementById("drop-form");
     // const formEl = ev.currentTarget.closest("form");
 
-    // Create textarea element & append it to the form
-    const textareaEl = document.createElement("textarea");
-    textareaEl.name = "content";
-    textareaEl.value = textData.content;
-    formEl.append(textareaEl);
+    // Set text content to the textarea element
+    const inputHiddenEl = document.getElementById("file-name");
+    const textareaEl = document.getElementById("file-content");
+    inputHiddenEl.value = tempFile.name;
+    textareaEl.value = tempFile.content;
 
     // Submitting the form
     submit(formEl, { replace: true });
+  };
+
+  const handleClick = function () {
+    console.log(files);
+    files.forEach((el) => {
+      console.log(el);
+    });
+    props.handleClick();
   };
 
   const dropzoneStyle = {
@@ -85,9 +90,10 @@ export default function DropzoneForm(props) {
         <ul>{files}</ul>
       </aside>
       <aside>
-        <TextField id="filled-basic" label="Filled" variant="filled" />
-        <TextButton buttonName="filter & save" onClick={submitForm} />
+        <TextButton buttonName="filter & save" onClick={handleClick} />
       </aside>
+      <input id="file-name" type="hidden" name="name" />
+      <textarea id="file-content" name="content" style={{ display: "none" }} />
     </form>
   );
 }

@@ -1,7 +1,10 @@
 import fs from "fs/promises";
 
-export function setText(text) {
-  const promise = fs.writeFile("text.json", JSON.stringify({ content: text }));
+export function setText(name, content) {
+  const promise = fs.writeFile(
+    "text.json",
+    JSON.stringify({ name: name, content: content })
+  );
   return promise;
 }
 

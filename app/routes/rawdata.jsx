@@ -11,15 +11,15 @@ export const meta = () => {
 export default function RawdataRoute() {
   const data = useLoaderData();
 
-  const handleClick = function () {
-    console.log("clicked");
-    const blob = new Blob(["Example"], { type: "text/plain;charset=utf-8" });
+  const saveFile = function () {
+    const blob = new Blob([data.content], { type: "text/plain;charset=utf-8" });
     const fileUrl = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.download = "example.txt";
+    link.download = `filtered_${data.name}`;
     link.href = fileUrl;
     link.click();
     URL.revokeObjectURL(link.href);
+    console.log("File Saved");
   };
 
   return (
@@ -34,7 +34,7 @@ export default function RawdataRoute() {
             height: 250,
           }}
         >
-          <DropzoneForm data={data} />
+          <DropzoneForm data={data} handleClick={saveFile} />
         </Paper>
       </Grid>
     </Grid>
@@ -42,18 +42,17 @@ export default function RawdataRoute() {
 }
 
 export async function action({ request }) {
-  console.log("Message from the server");
   const formData = await request.formData();
 
   // Filter the data
-  const data = formData.get("content");
-  console.log(data);
+  const name = formData.get("name");
+  const content = formData.get("content");
+  const allLines = content.split(/\r\n|\n/);
+  const filteredContent = allLines.map((line) => line.split(">")[1]);
+  console.log("Backend - ", "Data filtered");
 
-  // Reading line by line and filter them
-  const allLines = data.split(/\r\n|\n/);
-  const filteredData = allLines.map((line) => line.split(":")[1]);
-  console.log(filteredData);
-  await setText(filteredData[0]);
+  // Saving the filtered data into a temp file
+  await setText(name, filteredContent.join("\r\n"));
 
   // Redirect
   return redirect("/rawdata");
@@ -61,6 +60,6 @@ export async function action({ request }) {
 
 export async function loader() {
   const data = await getText();
-  console.log("from loader", data);
+  // console.log("from loader", data);
   return data;
 }
