@@ -7,6 +7,7 @@ import TextButton from "../inputs/textButton";
 const textData = { content: "" };
 
 export default function DropzoneForm(props) {
+  console.log(props.data);
   const submit = useSubmit();
   const onDrop = useCallback((acceptedFiles) => {
     console.log("a file has been drooped");
