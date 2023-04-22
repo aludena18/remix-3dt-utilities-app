@@ -1,5 +1,5 @@
 import { useSubmit } from "@remix-run/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Container, Typography, TextField } from "@mui/material";
 import TextButton from "../inputs/textButton";
@@ -7,8 +7,8 @@ import TextButton from "../inputs/textButton";
 const tempFile = { name: "", content: "" };
 
 export default function DropzoneForm(props) {
+  const [renderFiles, setRenderFiles] = useState(false);
   const submit = useSubmit();
-  // console.log(props.data);
 
   const onDrop = useCallback((acceptedFiles) => {
     console.log("a file has been drooped");
@@ -33,13 +33,15 @@ export default function DropzoneForm(props) {
   });
 
   let files = acceptedFiles.map((file) => (
-    <li key={file.path}>
+    <li key={file.path} id={file.path}>
       {file.path} - {file.size} bytes
     </li>
   ));
 
   const submitForm = function (ev) {
     console.log("submitted");
+    setRenderFiles(true);
+    props.handleSubmit();
     const formEl = document.getElementById("drop-form");
     // const formEl = ev.currentTarget.closest("form");
 
@@ -54,10 +56,7 @@ export default function DropzoneForm(props) {
   };
 
   const handleClick = function () {
-    console.log(files);
-    files.forEach((el) => {
-      console.log(el);
-    });
+    setRenderFiles(false);
     props.handleClick();
   };
 
@@ -87,7 +86,7 @@ export default function DropzoneForm(props) {
         <Typography sx={{ pt: 2 }} variant="h6">
           Files
         </Typography>
-        <ul>{files}</ul>
+        <ul>{renderFiles && files}</ul>
       </aside>
       <aside>
         <TextButton buttonName="filter & save" onClick={handleClick} />
