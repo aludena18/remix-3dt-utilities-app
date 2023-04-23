@@ -120,7 +120,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              3DT Utility App
+              Utility Apps
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">

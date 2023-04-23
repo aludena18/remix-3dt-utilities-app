@@ -1,14 +1,11 @@
 import fs from "fs/promises";
 
-export function setText(name, content) {
-  const promise = fs.writeFile(
-    "text.json",
-    JSON.stringify({ name: name, content: content })
-  );
+export function setData(data) {
+  const promise = fs.writeFile("text.json", JSON.stringify(data));
   return promise;
 }
 
-export async function getText() {
+export async function getData() {
   try {
     const rawFileContent = await fs.readFile("text.json", { encoding: "utf8" });
     const data = JSON.parse(rawFileContent);

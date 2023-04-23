@@ -1,7 +1,7 @@
 import { Grid, Paper } from "@mui/material";
 import { redirect } from "@remix-run/node";
 import DropzoneForm from "../components/dropzone/dropzoneForm";
-import { getText, setText } from "../data/helpers";
+import { setData, getData } from "../data/helpers";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 
@@ -16,14 +16,21 @@ export default function RawdataRoute() {
   const saveFile = function () {
     if (!submitted) return;
     setSubmitted(false);
-    const blob = new Blob([data.content], { type: "text/plain;charset=utf-8" });
-    const fileUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.download = `rawData_${data.name}`;
-    link.href = fileUrl;
-    link.click();
-    URL.revokeObjectURL(link.href);
-    console.log("File Saved");
+    console.log(data);
+
+    //Saving files
+    data.forEach((file) => {
+      const blob = new Blob([file.content], {
+        type: "text/plain;charset=utf-8",
+      });
+      const fileUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = `rawData_${file.name}`;
+      link.href = fileUrl;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      console.log("File Saved");
+    });
   };
 
   const handleSubmit = function () {
@@ -39,7 +46,7 @@ export default function RawdataRoute() {
             p: 2,
             display: "flex",
             flexDirection: "column",
-            height: 250,
+            // height: 280,
           }}
         >
           <DropzoneForm handleClick={saveFile} handleSubmit={handleSubmit} />
@@ -52,23 +59,27 @@ export default function RawdataRoute() {
 export async function action({ request }) {
   const formData = await request.formData();
 
-  // Filter the data
-  const name = formData.get("name");
-  const content = formData.get("content");
-  const allLines = content.split(/\r\n|\n/);
-  const filteredContent = allLines
-    .filter((frame) => frame.includes("Rec"))
-    .map((line) => line.split(">")[1]);
-  console.log("Backend - ", "Data filtered");
+  // Filtering the data
+  const filesDataStr = formData.get("files");
+  const filesData = JSON.parse(filesDataStr);
+  const filesDataFiltered = filesData.map((fileData) => {
+    const contentFiltered = fileData.content
+      .split(/\r\n|\n/)
+      .filter((frame) => frame.includes("Rec"))
+      .map((line) => line.split(">")[1])
+      .join("\r\n");
+    return { name: fileData.name, content: contentFiltered };
+  });
+  console.log(filesDataFiltered.length, " files filtered");
 
-  // Saving the filtered data into a temp file
-  await setText(name, filteredContent.join("\r\n"));
+  // Saving the data filtered
+  await setData(filesDataFiltered);
 
   // Redirect
   return redirect("/rawdata");
 }
 
 export async function loader() {
-  const data = await getText();
+  const data = await getData();
   return data;
 }
