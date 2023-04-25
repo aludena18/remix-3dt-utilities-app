@@ -73,34 +73,35 @@ export default function DropzoneForm(props) {
   };
 
   return (
-    <form id="drop-form" method="post">
-      <Box sx={{ border: "2px dashed gray" }}>
-        <div style={dropzoneStyle} {...getRootProps()}>
-          <input {...getInputProps()} />
-          <Typography
-            style={{ margin: "auto" }}
-            variant="body1"
-            align="center"
-            color="text.secondary"
-            paragraph
-          >
-            Drag 'n' drop some files here, or click to select files
+    <Container>
+      <form id="drop-form" method="post">
+        <Box sx={{ border: "1px dashed gray", borderRadius: 1 }}>
+          <div style={dropzoneStyle} {...getRootProps()}>
+            <input {...getInputProps()} />
+            <Typography
+              style={{ margin: "auto" }}
+              variant="body1"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              Drag 'n' drop some files here, or click to select files
+            </Typography>
+          </div>
+        </Box>
+        <aside>
+          <Typography sx={{ pt: 2 }} variant="h6">
+            Files
           </Typography>
-        </div>
-      </Box>
-      <aside>
-        <Typography sx={{ pt: 2 }} variant="h6">
-          Files
-        </Typography>
-        <ul>{renderFiles && files}</ul>
-      </aside>
-      <input id="files-data" type="hidden" name="files" />
-      {/* <textarea id="file-content" name="content" style={{ display: "none" }} /> */}
-      <TextButton
-        align="center"
-        buttonName="filter & save"
-        onClick={handleClick}
-      />
-    </form>
+          <ul>{renderFiles && files}</ul>
+        </aside>
+        <input id="files-data" type="hidden" name="files" />
+        <TextButton
+          align="center"
+          buttonName="filter & save"
+          onClick={handleClick}
+        />
+      </form>
+    </Container>
   );
 }

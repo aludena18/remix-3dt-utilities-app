@@ -73,13 +73,13 @@ export async function action({ request }) {
   console.log(filesDataFiltered.length, " files filtered");
 
   // Saving the data filtered
-  await setData(filesDataFiltered);
+  await setData(filesDataFiltered, "text.json");
 
   // Redirect
   return redirect("/rawdata");
 }
 
 export async function loader() {
-  const data = await getData();
+  const data = await getData("text.json");
   return data;
 }
