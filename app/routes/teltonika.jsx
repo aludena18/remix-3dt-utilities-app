@@ -6,13 +6,16 @@ import { getCRC16, getData, numToFixedSizeArr, setData } from "../data/helpers";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 
+export const meta = () => {
+  return [{ title: "Remix 3DT App" }];
+};
+
 export default function TeltonikaRoute() {
   const data = useLoaderData();
-  const [cmdMessage, setCmdMessage] = useState("");
+  const [showResult, setShowResult] = useState(false);
 
   const handleSetCmd = function () {
-    console.log("handling set cmd");
-    setCmdMessage(data[0].cmdMsg);
+    setShowResult(true);
   };
 
   return (
@@ -28,7 +31,7 @@ export default function TeltonikaRoute() {
           }}
         >
           <SimpleForm setCmd={handleSetCmd} />
-          <BoxResult sx={{ mt: 2 }} data={cmdMessage} />
+          <BoxResult sx={{ mt: 2 }} data={data[0].cmdMsg} show={showResult} />
         </Paper>
       </Grid>
     </Grid>
