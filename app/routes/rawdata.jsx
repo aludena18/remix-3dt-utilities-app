@@ -1,9 +1,14 @@
-import { Grid, Paper } from "@mui/material";
+import { Container, Grid, Paper } from "@mui/material";
 import { redirect } from "@remix-run/node";
 import DropzoneForm from "../components/dropzone/dropzoneForm";
 import { setData, getData } from "../data/helpers";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import Introduction from "../components/introduction/introduction";
+
+const textIntro = {
+  content: "This utility will help to filter a raw data file.",
+};
 
 export const meta = () => {
   return [{ title: "Remix 3DT App" }];
@@ -38,21 +43,24 @@ export default function RawdataRoute() {
   };
 
   return (
-    <Grid container spacing={3}>
-      {/* Chart */}
-      <Grid item xs={12} md={12} lg={12}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            // height: 280,
-          }}
-        >
-          <DropzoneForm handleClick={saveFile} handleSubmit={handleSubmit} />
-        </Paper>
+    <Container>
+      <Introduction title="Raw Data Filter" description={textIntro.content} />
+      <Grid container spacing={3}>
+        {/* Chart */}
+        <Grid item xs={12} md={12} lg={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              // height: 280,
+            }}
+          >
+            <DropzoneForm handleClick={saveFile} handleSubmit={handleSubmit} />
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   );
 }
 

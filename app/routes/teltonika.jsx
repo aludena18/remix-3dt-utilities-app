@@ -1,10 +1,16 @@
-import { Grid, Paper } from "@mui/material";
+import { Container, Grid, Paper } from "@mui/material";
 import SimpleForm from "../components/inputs/simpleForm";
 import BoxResult from "../components/outputs/boxResult";
 import { redirect } from "@remix-run/node";
 import { getCRC16, getData, numToFixedSizeArr, setData } from "../data/helpers";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import Introduction from "../components/introduction/introduction";
+
+const textIntro = {
+  content:
+    "This utility will help to convert a Teltonika string command to its hexadecimal version in order to be sent through the platform. For more information about the hexadecimal structure, visit de Teltonika's website and search for the codec 12",
+};
 
 export const meta = () => {
   return [{ title: "Remix 3DT App" }];
@@ -19,22 +25,25 @@ export default function TeltonikaRoute() {
   };
 
   return (
-    <Grid container spacing={3}>
-      {/* Chart */}
-      <Grid item xs={12} md={12} lg={12}>
-        <Paper
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            // height: 280,
-          }}
-        >
-          <SimpleForm setCmd={handleSetCmd} />
-          <BoxResult sx={{ mt: 2 }} data={data[0].cmdMsg} show={showResult} />
-        </Paper>
+    <Container>
+      <Introduction title="Teltonika" description={textIntro.content} />
+      <Grid container spacing={3}>
+        {/* Chart */}
+        <Grid item xs={12} md={12} lg={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              // height: 280,
+            }}
+          >
+            <SimpleForm setCmd={handleSetCmd} />
+            <BoxResult sx={{ mt: 2 }} data={data[0].cmdMsg} show={showResult} />
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   );
 }
 
