@@ -7,7 +7,8 @@ import { useState } from "react";
 import Introduction from "../components/introduction/introduction";
 
 const textIntro = {
-  content: "This utility will help to filter a raw data file.",
+  content:
+    "This utility will help to filter a raw data file. Drag and drop a raw data file into the box and press the button to download the file filtered.",
 };
 
 export const meta = () => {

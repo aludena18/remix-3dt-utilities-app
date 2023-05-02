@@ -6,6 +6,7 @@ import { getCRC16, getData, numToFixedSizeArr, setData } from "../data/helpers";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Introduction from "../components/introduction/introduction";
+import { teltonikaCommand, ruptelaCommand } from "../data/serverHelpers";
 
 const textIntro = {
   content:
@@ -38,7 +39,18 @@ export default function TeltonikaRoute() {
               // height: 280,
             }}
           >
-            <SimpleForm setCmd={handleSetCmd} />
+            <SimpleForm
+              formId={"tel-form"}
+              setCmd={handleSetCmd}
+              typeCmd={"telCmd"}
+              inputType={"teltonika-cmd"}
+            />
+            <SimpleForm
+              formId={"rup-form"}
+              setCmd={handleSetCmd}
+              typeCmd={"rupCmd"}
+              inputType={"ruptela-cmd"}
+            />
             <BoxResult sx={{ mt: 2 }} data={data[0].cmdMsg} show={showResult} />
           </Paper>
         </Grid>
@@ -50,35 +62,31 @@ export default function TeltonikaRoute() {
 // Backend
 export async function action({ request }) {
   const formData = await request.formData();
-  const commandStr = formData.get("command");
+  console.log(formData);
 
-  const command = [
-    ...commandStr.split("").map((char) => char.charCodeAt(0).toString(16)),
-    "0d",
-    "0a",
-  ];
-  const preamble = ["00", "00", "00", "00"];
-  const codecId = ["0c"];
-  const cmdQ1 = ["01"];
-  const type = ["05"];
-  const cmdSize = numToFixedSizeArr(command.length, 4);
-  const cmdQ2 = ["01"];
-  const data = [
-    ...codecId,
-    ...cmdQ1,
-    ...type,
-    ...cmdSize,
-    ...command,
-    ...cmdQ2,
-  ];
-  const dataSize = numToFixedSizeArr(data.length, 4);
+  // check
+  let commandMessage = "";
+  let commandStr = formData.get("telCmd");
+  if (commandStr) {
+    // Teltonika Command
+    console.log("Teltonika");
+    console.log("Command:", commandStr);
+    commandMessage = teltonikaCommand(commandStr);
+  } else {
+    console.log("Ruptela");
+    commandStr = formData.get("rupCmd");
+    console.log("Command:", commandStr);
+    commandMessage = ruptelaCommand(commandStr);
+  }
 
-  const dataBytes = data.map((char) => parseInt(char, 16));
-  const crc16 = numToFixedSizeArr(getCRC16(dataBytes), 4);
-
-  const commandMessage = [...preamble, ...dataSize, ...data, ...crc16]
-    .map((char) => char.toUpperCase())
-    .join(" ");
+  // if (commandStr) {
+  //   // Teltonika Command
+  //   console.log("Teltonika");
+  //   commandMessage = teltonikaCommand(commandStr);
+  // } else {
+  //   console.log("Ruptela");
+  //   commandMessage = ruptelaCommand(commandStr);
+  // }
 
   // Saving the command
   await setData([{ cmdMsg: commandMessage }], "textCmd.json");

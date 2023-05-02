@@ -9,19 +9,21 @@ export default function SimpleForm(props) {
 
   const handleSubmit = function (ev) {
     ev.preventDefault();
-    submitForm();
+    submitForm(ev);
   };
 
-  const submitForm = function () {
+  const submitForm = function (ev) {
     if (!input) return;
     console.log("submitted");
 
     // Copy the content to the hidden input
-    const inputHiddenEl = document.getElementById("cmd-data");
+    const elementID = props.inputType;
+    const inputHiddenEl = document.getElementById(elementID);
     inputHiddenEl.value = input;
 
     // Submit the form
-    const formEl = document.getElementById("cmd-form");
+    // const formEl = document.getElementById("tel-form");
+    const formEl = ev.currentTarget.closest("form");
     submit(formEl, { replace: true });
     setInput("");
     props.setCmd();
@@ -33,7 +35,7 @@ export default function SimpleForm(props) {
 
   return (
     <Container>
-      <form id="cmd-form" method="post" onSubmit={handleSubmit}>
+      <form id={props.formId} method="post" onSubmit={handleSubmit}>
         <TextField
           id="filled-basic"
           label="Command"
@@ -43,7 +45,7 @@ export default function SimpleForm(props) {
           onChange={handleOnChange}
           value={input}
         />
-        <input id="cmd-data" type="hidden" name="command" />
+        <input id={props.inputType} type="hidden" name={props.typeCmd} />
         <TextButton buttonName="hex command" onClick={submitForm} />
       </form>
     </Container>
