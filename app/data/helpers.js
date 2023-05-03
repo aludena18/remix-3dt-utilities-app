@@ -55,3 +55,62 @@ export function getCRC16(buffer) {
 
   return crc;
 }
+
+export const crc16ccitt = (regInit, message) => {
+  if (typeof message === "undefined") {
+    console.log("undefined");
+    message = regInit;
+    regInit = 0x0000;
+  }
+
+  if (typeof message === "string") {
+    console.log("string");
+    message = message.split("").map((c) => c.charCodeAt(0));
+    console.log(message);
+  }
+
+  // Binary input reverse
+  const binArrInput = message.map((num) => mirror_bits(num));
+  // console.log("Binary Input Reversed---->", binArrInput);
+
+  const input = binArrInput;
+
+  let crc = regInit + 0;
+  const polynomial = 0x1021;
+
+  for (const b of input) {
+    for (let i = 0; i < 8; i++) {
+      const bit = ((b >> (7 - i)) & 1) === 1;
+      const c15 = ((crc >> 15) & 1) === 1;
+      crc <<= 1;
+      if (c15 ^ bit) crc ^= polynomial;
+    }
+  }
+
+  crc &= 0xffff;
+  console.log("crc ", crc);
+
+  // Binary output reverse
+  const output = mirror_16bits(crc);
+  console.log("crc reversed", output);
+
+  return output;
+};
+
+function mirror_bits(n) {
+  let t = n.toString(2).split("");
+  let str_len = t.length;
+  for (let i = 0; i < 8 - str_len; i++) {
+    t.unshift("0");
+  }
+  return parseInt(t.reverse().join(""), 2);
+}
+
+function mirror_16bits(n) {
+  let t = n.toString(2).split("");
+  let str_len = t.length;
+  for (let i = 0; i < 16 - str_len; i++) {
+    t.unshift("0");
+  }
+  return parseInt(t.reverse().join(""), 2);
+}

@@ -1,4 +1,4 @@
-import { numToFixedSizeArr, getCRC16 } from "./helpers";
+import { numToFixedSizeArr, getCRC16, crc16ccitt } from "./helpers";
 
 // Teltonika Command
 export const teltonikaCommand = function (commandStr) {
@@ -39,12 +39,14 @@ export const ruptelaCommand = function (commandStr) {
     .split("")
     .map((char) => char.charCodeAt(0).toString(16));
   const data = [...commandID, ...payload];
-  const packetLength = numToFixedSizeArr(data, 2);
+  const packetLength = numToFixedSizeArr(data.length, 2);
 
   const dataBytes = data.map((char) => parseInt(char, 16));
-  const crc16 = numToFixedSizeArr(getCRC16(dataBytes), 2);
+  const crc16 = numToFixedSizeArr(crc16ccitt(dataBytes), 2);
 
-  console.log("CRC16 -----> ", crc16);
+  const commandMessage = [...packetLength, ...data, ...crc16]
+    .map((char) => char.toUpperCase())
+    .join(" ");
 
-  return "something";
+  return commandMessage;
 };

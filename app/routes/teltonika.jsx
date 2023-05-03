@@ -10,7 +10,7 @@ import { teltonikaCommand, ruptelaCommand } from "../data/serverHelpers";
 
 const textIntro = {
   content:
-    "This utility will help to convert a Teltonika string command to its hexadecimal version in order to be sent through the platform. For more information about the hexadecimal structure, visit de Teltonika's website and search for the codec 12",
+    "This utility will help to convert a string command to its hexadecimal version in order to be sent through the platform. For more information about the hexadecimal structure, visit each device website and search for the GPRS commands.",
 };
 
 export const meta = () => {
