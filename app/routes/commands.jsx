@@ -2,11 +2,12 @@ import { Container, Grid, Paper } from "@mui/material";
 import SimpleForm from "../components/inputs/simpleForm";
 import BoxResult from "../components/outputs/boxResult";
 import { redirect } from "@remix-run/node";
-import { getCRC16, getData, numToFixedSizeArr, setData } from "../data/helpers";
+import { getData, setData } from "../data/helpers";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Introduction from "../components/introduction/introduction";
-import { teltonikaCommand, ruptelaCommand } from "../data/serverHelpers";
+import { getCommandHex } from "../data/serverHelpers";
+import BasicSelectMenu from "../components/menu/basicSelectMenu";
 
 const textIntro = {
   content:
@@ -17,17 +18,22 @@ export const meta = () => {
   return [{ title: "Remix 3DT App" }];
 };
 
-export default function TeltonikaRoute() {
+export default function CommandsRoute() {
   const data = useLoaderData();
   const [showResult, setShowResult] = useState(false);
+  const [deviceId, setDeviceId] = useState(0);
 
   const handleSetCmd = function () {
     setShowResult(true);
   };
 
+  const handleSetDeviceId = function (id) {
+    setDeviceId(id);
+  };
+
   return (
     <Container>
-      <Introduction title="Teltonika" description={textIntro.content} />
+      <Introduction title="GPRS Commands" description={textIntro.content} />
       <Grid container spacing={3}>
         {/* Chart */}
         <Grid item xs={12} md={12} lg={12}>
@@ -39,19 +45,13 @@ export default function TeltonikaRoute() {
               // height: 280,
             }}
           >
-            <SimpleForm
-              formId={"tel-form"}
-              setCmd={handleSetCmd}
-              typeCmd={"telCmd"}
-              inputType={"teltonika-cmd"}
+            <BasicSelectMenu sx={{ pb: 2 }} setDeviceId={handleSetDeviceId} />
+            <SimpleForm setCmd={handleSetCmd} device={deviceId} />
+            <BoxResult
+              sx={{ mt: 2 }}
+              data={data[0].commandHex}
+              show={showResult}
             />
-            <SimpleForm
-              formId={"rup-form"}
-              setCmd={handleSetCmd}
-              typeCmd={"rupCmd"}
-              inputType={"ruptela-cmd"}
-            />
-            <BoxResult sx={{ mt: 2 }} data={data[0].cmdMsg} show={showResult} />
           </Paper>
         </Grid>
       </Grid>
@@ -62,37 +62,22 @@ export default function TeltonikaRoute() {
 // Backend
 export async function action({ request }) {
   const formData = await request.formData();
-  console.log(formData);
+  const commandStr = formData.get("command");
+  const device = formData.get("device");
 
-  // check
-  let commandMessage = "";
-  let commandStr = formData.get("telCmd");
-  if (commandStr) {
-    // Teltonika Command
-    console.log("Teltonika");
-    console.log("Command:", commandStr);
-    commandMessage = teltonikaCommand(commandStr);
-  } else {
-    console.log("Ruptela");
-    commandStr = formData.get("rupCmd");
-    console.log("Command:", commandStr);
-    commandMessage = ruptelaCommand(commandStr);
-  }
+  console.log(`Device:${device}, Command:${commandStr}`);
 
-  // if (commandStr) {
-  //   // Teltonika Command
-  //   console.log("Teltonika");
-  //   commandMessage = teltonikaCommand(commandStr);
-  // } else {
-  //   console.log("Ruptela");
-  //   commandMessage = ruptelaCommand(commandStr);
-  // }
+  let commandHex = getCommandHex(device, commandStr);
+  console.log(commandHex);
 
   // Saving the command
-  await setData([{ cmdMsg: commandMessage }], "textCmd.json");
+  await setData(
+    [{ device: device, commandStr: commandStr, commandHex: commandHex }],
+    "textCmd.json"
+  );
 
   // Redirect
-  return redirect("/teltonika");
+  return redirect("/commands");
 }
 
 export async function loader() {

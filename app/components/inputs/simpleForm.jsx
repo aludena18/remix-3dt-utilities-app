@@ -17,9 +17,11 @@ export default function SimpleForm(props) {
     console.log("submitted");
 
     // Copy the content to the hidden input
-    const elementID = props.inputType;
-    const inputHiddenEl = document.getElementById(elementID);
-    inputHiddenEl.value = input;
+    const commandHiddenEl = document.getElementById("frm-command");
+    commandHiddenEl.value = input;
+
+    const deviceHiddenEl = document.getElementById("frm-device");
+    deviceHiddenEl.value = props.device;
 
     // Submit the form
     // const formEl = document.getElementById("tel-form");
@@ -35,7 +37,7 @@ export default function SimpleForm(props) {
 
   return (
     <Container>
-      <form id={props.formId} method="post" onSubmit={handleSubmit}>
+      <form id="cmd-form" method="post" onSubmit={handleSubmit}>
         <TextField
           id="filled-basic"
           label="Command"
@@ -45,7 +47,8 @@ export default function SimpleForm(props) {
           onChange={handleOnChange}
           value={input}
         />
-        <input id={props.inputType} type="hidden" name={props.typeCmd} />
+        <input id="frm-device" type="hidden" name="device" />
+        <input id="frm-command" type="hidden" name="command" />
         <TextButton buttonName="hex command" onClick={submitForm} />
       </form>
     </Container>

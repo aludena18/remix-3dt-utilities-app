@@ -50,3 +50,18 @@ export const ruptelaCommand = function (commandStr) {
 
   return commandMessage;
 };
+
+// Get command
+export const getCommandHex = function (device, commandStr) {
+  switch (+device) {
+    case 1:
+      console.log("Teltonika");
+      return teltonikaCommand(commandStr);
+    case 2:
+      console.log("Ruptela");
+      return ruptelaCommand(commandStr);
+
+    default:
+      return "";
+  }
+};

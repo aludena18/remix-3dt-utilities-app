@@ -23,12 +23,12 @@ export const mainListItems = function (handleTitle) {
           <ListItemText primary="Raw Data Filter" />
         </ListItemButton>
       </Link>
-      <Link style={linkStyle} to="teltonika">
-        <ListItemButton onClick={() => handleTitle(" - Teltonika")}>
+      <Link style={linkStyle} to="commands">
+        <ListItemButton onClick={() => handleTitle(" - GPRS Commands")}>
           <ListItemIcon>
             <KeyboardArrowRightIcon />
           </ListItemIcon>
-          <ListItemText primary="Teltonika" />
+          <ListItemText primary="Commands" />
         </ListItemButton>
       </Link>
     </React.Fragment>
