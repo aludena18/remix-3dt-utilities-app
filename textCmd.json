@@ -1,1 +1,1 @@
-[{"device":"2","commandStr":"setcfg 1122 600","commandHex":"00 10 6C 73 65 74 63 66 67 20 31 31 32 32 20 36 30 30 67 F4"}]
+[{"date":"Fri May 19 2023 15:11:58 GMT-0500 (Peru Standard Time)","device":"Teltonika","commandStr":"setparam 45002:11857","commandHex":"00 00 00 00 00 00 00 1E 0C 01 05 00 00 00 16 73 65 74 70 61 72 61 6D 20 34 35 30 30 32 3A 31 31 38 35 37 0D 0A 01 00 00 68 A4"}]

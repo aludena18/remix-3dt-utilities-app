@@ -1,4 +1,23 @@
 import { numToFixedSizeArr, getCRC16, crc16ccitt } from "./helpers";
+import fs from "fs/promises";
+import { devicesList } from "./config";
+
+// Set data into a temporary file
+export function setData(data, file) {
+  const promise = fs.writeFile(file, JSON.stringify(data));
+  return promise;
+}
+
+// Get data from the temporaty file
+export async function getData(file) {
+  try {
+    const rawFileContent = await fs.readFile(file, { encoding: "utf8" });
+    const data = JSON.parse(rawFileContent);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 // Teltonika Command
 export const teltonikaCommand = function (commandStr) {
@@ -54,14 +73,19 @@ export const ruptelaCommand = function (commandStr) {
 // Get command
 export const getCommandHex = function (device, commandStr) {
   switch (+device) {
-    case 1:
+    case 0:
       console.log("Teltonika");
       return teltonikaCommand(commandStr);
-    case 2:
+    case 1:
       console.log("Ruptela");
       return ruptelaCommand(commandStr);
 
     default:
       return "";
   }
+};
+
+// Get device Name
+export const getDeviceName = function (id) {
+  return devicesList[id];
 };

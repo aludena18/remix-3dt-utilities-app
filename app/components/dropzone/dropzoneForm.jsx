@@ -40,7 +40,8 @@ export default function DropzoneForm(props) {
 
   let files = acceptedFiles.map((file) => (
     <li key={file.path} id={file.path}>
-      {file.path} - {file.size} bytes
+      {/* {file.path} - {file.size} bytes */}
+      {file.path}
     </li>
   ));
 
@@ -52,8 +53,6 @@ export default function DropzoneForm(props) {
     // const formEl = ev.currentTarget.closest("form");
 
     // Set text content to the textarea element
-    // const textareaEl = document.getElementById("file-content");
-    // textareaEl.value = tempFile.content;
     const inputHiddenEl = document.getElementById("files-data");
     inputHiddenEl.value = data;
 
@@ -90,10 +89,12 @@ export default function DropzoneForm(props) {
           </div>
         </Box>
         <aside>
-          <Typography sx={{ pt: 2 }} variant="h6">
+          <Typography sx={{ pt: 2 }} variant="body2">
             Files
           </Typography>
-          <ul>{renderFiles && files}</ul>
+          <ul>
+            <Typography variant="body2">{renderFiles && files}</Typography>
+          </ul>
         </aside>
         <input id="files-data" type="hidden" name="files" />
         <TextButton

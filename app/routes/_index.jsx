@@ -1,7 +1,15 @@
+import * as config from "../data/config.js";
+import Introduction from "../components/introduction/introduction.jsx";
+
 export const meta = () => {
-  return [{ title: "Remix 3DT App" }];
+  return [{ title: config.tabTitle }];
 };
 
 export default function Index() {
-  return <h2>News</h2>;
+  return (
+    <Introduction
+      title={config.sections.index.title}
+      description={config.sections.index.description}
+    />
+  );
 }

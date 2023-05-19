@@ -1,20 +1,3 @@
-import fs from "fs/promises";
-
-export function setData(data, file) {
-  const promise = fs.writeFile(file, JSON.stringify(data));
-  return promise;
-}
-
-export async function getData(file) {
-  try {
-    const rawFileContent = await fs.readFile(file, { encoding: "utf8" });
-    const data = JSON.parse(rawFileContent);
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 // Returns a fixed size array of string hex bytes from a number
 export function numToFixedSizeArr(val, arrNumBytes) {
   const hexArr = [];
@@ -36,6 +19,7 @@ export function numToFixedSizeArr(val, arrNumBytes) {
   return hexArr;
 }
 
+// Retunr CRC 16 IBM - https://www.lddgo.net/en/encrypt/crc
 export function getCRC16(buffer) {
   // let crc = 0xffff;
   let crc = 0x0000;
@@ -56,23 +40,20 @@ export function getCRC16(buffer) {
   return crc;
 }
 
+// Return CRC 16 CCITT - https://www.lddgo.net/en/encrypt/crc
 export const crc16ccitt = (regInit, message) => {
   if (typeof message === "undefined") {
-    // console.log("undefined");
     message = regInit;
     regInit = 0x0000;
   }
 
   if (typeof message === "string") {
-    // console.log("string");
     message = message.split("").map((c) => c.charCodeAt(0));
     console.log(message);
   }
 
   // Binary input reverse
   const binArrInput = message.map((num) => mirror_nbits(8, num));
-  // console.log("Binary Input Reversed---->", binArrInput);
-
   const input = binArrInput;
 
   let crc = regInit + 0;
@@ -86,17 +67,15 @@ export const crc16ccitt = (regInit, message) => {
       if (c15 ^ bit) crc ^= polynomial;
     }
   }
-
   crc &= 0xffff;
-  // console.log("crc ", crc);
 
   // Binary output reverse
   const output = mirror_nbits(16, crc);
-  // console.log("crc reversed", output);
 
   return output;
 };
 
+// Return a number where the bits have been reversed
 function mirror_nbits(digits, n) {
   let t = n.toString(2).split("");
   let str_len = t.length;

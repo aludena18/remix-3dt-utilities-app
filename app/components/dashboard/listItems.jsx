@@ -2,9 +2,8 @@ import * as React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import WifiIcon from "@mui/icons-material/Wifi";
 import { Link } from "@remix-run/react";
 
 const linkStyle = {
@@ -18,15 +17,15 @@ export const mainListItems = function (handleTitle) {
       <Link style={linkStyle} to="rawdata">
         <ListItemButton onClick={() => handleTitle(" - Raw Data Filter")}>
           <ListItemIcon>
-            <KeyboardArrowRightIcon />
+            <TextSnippetIcon />
           </ListItemIcon>
           <ListItemText primary="Raw Data Filter" />
         </ListItemButton>
       </Link>
       <Link style={linkStyle} to="commands">
-        <ListItemButton onClick={() => handleTitle(" - GPRS Commands")}>
+        <ListItemButton onClick={() => handleTitle(" - Commands")}>
           <ListItemIcon>
-            <KeyboardArrowRightIcon />
+            <WifiIcon />
           </ListItemIcon>
           <ListItemText primary="Commands" />
         </ListItemButton>

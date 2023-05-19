@@ -2,10 +2,12 @@ import { useSubmit } from "@remix-run/react";
 import { Container, TextField } from "@mui/material";
 import TextButton from "./textButton";
 import { useState } from "react";
+import BasicSelectMenu, { clearDevice } from "../menu/basicSelectMenu";
 
-export default function SimpleForm(props) {
+export default function CustomCommandForm(props) {
   const submit = useSubmit();
   const [input, setInput] = useState("");
+  const [deviceId, setDeviceId] = useState(0);
 
   const handleSubmit = function (ev) {
     ev.preventDefault();
@@ -21,13 +23,14 @@ export default function SimpleForm(props) {
     commandHiddenEl.value = input;
 
     const deviceHiddenEl = document.getElementById("frm-device");
-    deviceHiddenEl.value = props.device;
+    deviceHiddenEl.value = deviceId;
 
     // Submit the form
     // const formEl = document.getElementById("tel-form");
     const formEl = ev.currentTarget.closest("form");
     submit(formEl, { replace: true });
     setInput("");
+    clearDevice();
     props.setCmd();
   };
 
@@ -35,9 +38,17 @@ export default function SimpleForm(props) {
     setInput(ev.target.value);
   };
 
+  const handleDeviceId = function (id) {
+    setDeviceId(id);
+  };
+
   return (
     <Container>
       <form id="cmd-form" method="post" onSubmit={handleSubmit}>
+        <BasicSelectMenu
+          sx={{ pb: 2, minWidth: 120 }}
+          setDeviceId={handleDeviceId}
+        />
         <TextField
           id="filled-basic"
           label="Command"

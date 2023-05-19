@@ -2,7 +2,16 @@ import { Container, Box, Typography } from "@mui/material";
 
 export default function boxResult(props) {
   const result = function () {
-    return <Typography variant="body2">{props.data}</Typography>;
+    return (
+      <Box>
+        <Typography variant="body2">Last request: {props.data.date}</Typography>
+        <Typography variant="body2">Device: {props.data.device}</Typography>
+        <Typography variant="body2">Comand: {props.data.commandStr}</Typography>
+        <Typography variant="body2">
+          Comand Hex: {props.data.commandHex}
+        </Typography>
+      </Box>
+    );
   };
 
   return (
@@ -13,10 +22,10 @@ export default function boxResult(props) {
           border: "1px solid ",
           borderColor: "#bbb",
           borderRadius: 1,
-          minHeight: 112,
+          minHeight: 120,
         }}
       >
-        {props.show && result()}
+        {result()}
       </Box>
     </Container>
   );

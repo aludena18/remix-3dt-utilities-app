@@ -4,7 +4,7 @@ export default function Introduction(props) {
   return (
     <Box component="div" sx={{ mb: 2 }}>
       <Box component="div">
-        <Typography variant="h3">{props.title}</Typography>
+        <Typography variant="h4">{props.title}</Typography>
       </Box>
       <Divider sx={{ mb: 2 }} />
       <Box component="div">
