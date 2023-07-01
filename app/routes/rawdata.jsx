@@ -12,16 +12,17 @@ export const meta = () => {
 };
 
 export default function RawdataRoute() {
-  const data = useLoaderData();
-  const [submitted, setSubmitted] = useState(false);
+  // const data = "";
+  const [dataFiltered, setDataFiltered] = useState([]);
+  const [readyToSave, setreadyToSave] = useState(false);
 
   const saveFile = function () {
-    if (!submitted) return;
-    setSubmitted(false);
-    console.log(data);
+    if (!readyToSave) return;
+    setreadyToSave(false);
+    console.log(dataFiltered);
 
     //Saving files
-    data.forEach((file) => {
+    dataFiltered.forEach((file) => {
       const blob = new Blob([file.content], {
         type: "text/plain;charset=utf-8",
       });
@@ -35,8 +36,12 @@ export default function RawdataRoute() {
     });
   };
 
-  const handleSubmit = function () {
-    setSubmitted(true);
+  const handleReadyToSave = function () {
+    setreadyToSave(true);
+  };
+
+  const handleSetDataFiltered = function (data) {
+    setDataFiltered(data);
   };
 
   return (
@@ -56,7 +61,11 @@ export default function RawdataRoute() {
               // height: 280,
             }}
           >
-            <DropzoneForm handleClick={saveFile} handleSubmit={handleSubmit} />
+            <DropzoneForm
+              handleClick={saveFile}
+              handleReadyToSave={handleReadyToSave}
+              handleSetDataFiltered={handleSetDataFiltered}
+            />
           </Paper>
         </Grid>
       </Grid>
@@ -64,6 +73,7 @@ export default function RawdataRoute() {
   );
 }
 
+/*
 export async function action({ request }) {
   const formData = await request.formData();
 
@@ -91,3 +101,4 @@ export async function loader() {
   const data = await getData("text.json");
   return data;
 }
+*/

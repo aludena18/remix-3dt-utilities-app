@@ -28,8 +28,22 @@ export default function DropzoneForm(props) {
       reader.onloadend = () => {
         if (filesData.length !== acceptedFiles.length) return;
         console.log("finish reading files", filesData);
-        const filesDataStr = JSON.stringify(filesData);
-        submitForm(filesDataStr);
+        // const filesDataStr = JSON.stringify(filesData);
+        // submitForm(filesDataStr);
+
+        // Filter logic
+        const filesDataFiltered = filesData.map((fileData) => {
+          const contentFiltered = fileData.content
+            .split(/\r\n|\n/)
+            .filter((frame) => frame.includes("Rec"))
+            .map((line) => line.split(">")[1])
+            .join("\r\n");
+          return { name: fileData.name, content: contentFiltered };
+        });
+        console.log(filesDataFiltered.length, " files filtered");
+        setRenderFiles(true);
+        props.handleReadyToSave();
+        props.handleSetDataFiltered(filesDataFiltered);
       };
     });
   }, []);
@@ -45,6 +59,7 @@ export default function DropzoneForm(props) {
     </li>
   ));
 
+  /*
   const submitForm = function (data) {
     console.log("submitted");
     setRenderFiles(true);
@@ -59,6 +74,7 @@ export default function DropzoneForm(props) {
     // Submitting the form
     submit(formEl, { replace: true });
   };
+  */
 
   const handleClick = function () {
     setRenderFiles(false);
