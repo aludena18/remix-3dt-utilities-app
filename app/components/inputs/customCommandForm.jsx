@@ -5,9 +5,11 @@ import { useState } from "react";
 import BasicSelectMenu, { clearDevice } from "../menu/basicSelectMenu";
 
 export default function CustomCommandForm(props) {
+  const TEXTFIELD_COMMAND_LABEL = "Command";
   const submit = useSubmit();
   const [input, setInput] = useState("");
   const [deviceId, setDeviceId] = useState(0);
+  const [cmdEmptyErr, setCmdEmptyErr] = useState(false);
 
   const handleSubmit = function (ev) {
     ev.preventDefault();
@@ -15,7 +17,10 @@ export default function CustomCommandForm(props) {
   };
 
   const submitForm = function (ev) {
-    if (!input) return;
+    if (!input) {
+      setCmdEmptyErr(true);
+      return;
+    }
     console.log("submitted");
 
     // Copy the content to the hidden input
@@ -35,6 +40,7 @@ export default function CustomCommandForm(props) {
   };
 
   const handleOnChange = function (ev) {
+    setCmdEmptyErr(false);
     setInput(ev.target.value);
   };
 
@@ -50,8 +56,9 @@ export default function CustomCommandForm(props) {
           setDeviceId={handleDeviceId}
         />
         <TextField
+          error={cmdEmptyErr}
           id="filled-basic"
-          label="Command"
+          label={TEXTFIELD_COMMAND_LABEL}
           variant="outlined"
           fullWidth
           sx={{ pb: 2 }}

@@ -1,11 +1,26 @@
 import { useSubmit } from "@remix-run/react";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Box, Container, Typography, TextField } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import TextButton from "../inputs/textButton";
 
 export default function DropzoneForm(props) {
+  const BUTTON_NAME = "FILTER & SAVE";
+  const FILTER_WORD_HELPER_TEXT = "Entry required.";
+  const CHECKBOX_LABEL = "Only content after de keyword";
   const [renderFiles, setRenderFiles] = useState(false);
+  const [inputError, setInputError] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [filesArr, setFilesArr] = useState([]);
+  const [filterWord, setFilterWord] = useState("");
   const submit = useSubmit();
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -27,23 +42,10 @@ export default function DropzoneForm(props) {
       };
       reader.onloadend = () => {
         if (filesData.length !== acceptedFiles.length) return;
-        console.log("finish reading files", filesData);
-        // const filesDataStr = JSON.stringify(filesData);
-        // submitForm(filesDataStr);
-
-        // Filter logic
-        const filesDataFiltered = filesData.map((fileData) => {
-          const contentFiltered = fileData.content
-            .split(/\r\n|\n/)
-            .filter((frame) => frame.includes("Rec"))
-            .map((line) => line.split(">")[1])
-            .join("\r\n");
-          return { name: fileData.name, content: contentFiltered };
-        });
-        console.log(filesDataFiltered.length, " files filtered");
-        setRenderFiles(true);
+        setFilesArr(filesData);
+        // console.log("finish reading files", filesData);
         props.handleReadyToSave();
-        props.handleSetDataFiltered(filesDataFiltered);
+        setRenderFiles(true);
       };
     });
   }, []);
@@ -59,26 +61,38 @@ export default function DropzoneForm(props) {
     </li>
   ));
 
-  /*
-  const submitForm = function (data) {
-    console.log("submitted");
-    setRenderFiles(true);
-    props.handleSubmit();
-    const formEl = document.getElementById("drop-form");
-    // const formEl = ev.currentTarget.closest("form");
-
-    // Set text content to the textarea element
-    const inputHiddenEl = document.getElementById("files-data");
-    inputHiddenEl.value = data;
-
-    // Submitting the form
-    submit(formEl, { replace: true });
-  };
-  */
-
   const handleClick = function () {
+    // Filter logic
+    if (!filterWord) {
+      setInputError(true);
+      return;
+    }
+    const filesDataFiltered = filesArr.map((fileData) => {
+      const firstFilter = fileData.content
+        .split(/\r\n|\n/)
+        .filter((frame) => frame.includes(filterWord));
+
+      const secondFilter = check
+        ? firstFilter.map((line) => line.split(filterWord)[1]).join("\r\n")
+        : [];
+      const contentFiltered = check ? secondFilter : firstFilter.join("\r\n");
+      return { name: fileData.name, content: contentFiltered };
+    });
+    //console.log(filesDataFiltered.length, " files filtered");
+
+    setFilterWord("");
+    setCheck(false);
     setRenderFiles(false);
-    props.handleClick();
+    props.handleSetDataFiltered(filesDataFiltered);
+  };
+
+  const handleOnChange = function (ev) {
+    setInputError(false);
+    setFilterWord(ev.target.value);
+  };
+
+  const handleOnChangeCheck = function (ev) {
+    setCheck((st) => !st);
   };
 
   const dropzoneStyle = {
@@ -90,6 +104,7 @@ export default function DropzoneForm(props) {
   return (
     <Container>
       <form id="drop-form" method="post">
+        {/* Drop zone */}
         <Box sx={{ border: "1px dashed gray", borderRadius: 1 }}>
           <div style={dropzoneStyle} {...getRootProps()}>
             <input {...getInputProps()} />
@@ -104,6 +119,30 @@ export default function DropzoneForm(props) {
             </Typography>
           </div>
         </Box>
+
+        {/* Input - filter */}
+        <Box sx={{ pt: 2 }}>
+          <TextField
+            error={inputError}
+            helperText={inputError && FILTER_WORD_HELPER_TEXT}
+            id="outlined-basic"
+            label="Keyword"
+            variant="outlined"
+            onChange={handleOnChange}
+            value={filterWord}
+          />
+        </Box>
+
+        {/* Input - Checkbox */}
+        <FormGroup>
+          <FormControlLabel
+            onChange={handleOnChangeCheck}
+            control={<Checkbox checked={check} />}
+            label={CHECKBOX_LABEL}
+          />
+        </FormGroup>
+
+        {/* Files list */}
         <aside>
           <Typography sx={{ pt: 2 }} variant="body2">
             Files
@@ -112,10 +151,13 @@ export default function DropzoneForm(props) {
             <Typography variant="body2">{renderFiles && files}</Typography>
           </ul>
         </aside>
+
         <input id="files-data" type="hidden" name="files" />
+
+        {/* Button */}
         <TextButton
           align="center"
-          buttonName="filter & save"
+          buttonName={BUTTON_NAME}
           onClick={handleClick}
         />
       </form>

@@ -6,6 +6,19 @@ import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import WifiIcon from "@mui/icons-material/Wifi";
 import { Link } from "@remix-run/react";
 
+const sections = [
+  {
+    link: "rawdata",
+    headerTitle: " - Text Filter",
+    sectionTitle: "Text Filter",
+  },
+  {
+    link: "commands",
+    headerTitle: " - Commands",
+    sectionTitle: "Commands",
+  },
+];
+
 const linkStyle = {
   textDecoration: "inherit",
   color: "inherit",
@@ -14,20 +27,20 @@ const linkStyle = {
 export const mainListItems = function (handleTitle) {
   return (
     <React.Fragment>
-      <Link style={linkStyle} to="rawdata">
-        <ListItemButton onClick={() => handleTitle(" - Raw Data Filter")}>
+      <Link style={linkStyle} to={sections[0].link}>
+        <ListItemButton onClick={() => handleTitle(sections[0].headerTitle)}>
           <ListItemIcon>
             <TextSnippetIcon />
           </ListItemIcon>
-          <ListItemText primary="Raw Data Filter" />
+          <ListItemText primary={sections[0].sectionTitle} />
         </ListItemButton>
       </Link>
-      <Link style={linkStyle} to="commands">
-        <ListItemButton onClick={() => handleTitle(" - Commands")}>
+      <Link style={linkStyle} to={sections[1].link}>
+        <ListItemButton onClick={() => handleTitle(sections[1].headerTitle)}>
           <ListItemIcon>
             <WifiIcon />
           </ListItemIcon>
-          <ListItemText primary="Commands" />
+          <ListItemText primary={sections[1].sectionTitle} />
         </ListItemButton>
       </Link>
     </React.Fragment>

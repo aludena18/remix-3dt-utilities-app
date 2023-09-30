@@ -2,21 +2,21 @@ export const sections = {
   index: {
     title: "Intro",
     description:
-      "This is an application with some utilities that you might find usefull for your daily routine at work at 3DTracking",
+      "This is an application with some utilities that you might find useful. It contains a section to filter text files and a second section for generating commands in hexadecimal format for specific types of gps tracker devices.",
   },
   rawData: {
-    title: "Raw Data Filter",
+    title: "Text Filter",
     description:
-      "This utility will help you to filter a raw data file downloaded from FileZilla and have only the received messages, which are the messages sent by the device. Drag and drop a raw-data file into the box and press the button to download the file filtered.",
+      "This utility will help you to filter a text file by mapping all the lines in the file and only include those that match with the keyword defined in the filter box. You can also use the checkbox below to return the content after the keyword in each line.",
   },
   commands: {
-    title: "GPRS Commands",
+    title: "Commands",
     description:
-      "This utility will help you to convert a string command to its hexadecimal version in order to be sent through the platform. For more information about the hexadecimal structure, visit each device's website and search for the GPRS command.",
+      "This utility will help you to convert a gps tracker device command to its hexadecimal format in order to be sent over GPRS. The devices supported are listed in the drop down menu. For more information about the hexadecimal structure, visit each device's website and search for the command section",
   },
 };
 
-export const tabTitle = "3DT Utilities";
+export const tabTitle = "Utilities";
 
 // List fot the basicSelectMenu component
 export const devicesList = ["Teltonika", "Ruptela"];

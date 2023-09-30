@@ -12,14 +12,12 @@ export const meta = () => {
 };
 
 export default function RawdataRoute() {
-  // const data = "";
-  const [dataFiltered, setDataFiltered] = useState([]);
   const [readyToSave, setreadyToSave] = useState(false);
 
-  const saveFile = function () {
+  const saveFile = function (dataFiltered) {
     if (!readyToSave) return;
     setreadyToSave(false);
-    console.log(dataFiltered);
+    // console.log(dataFiltered);
 
     //Saving files
     dataFiltered.forEach((file) => {
@@ -41,7 +39,7 @@ export default function RawdataRoute() {
   };
 
   const handleSetDataFiltered = function (data) {
-    setDataFiltered(data);
+    saveFile(data);
   };
 
   return (
