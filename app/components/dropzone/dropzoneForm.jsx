@@ -15,7 +15,7 @@ import TextButton from "../inputs/textButton";
 export default function DropzoneForm(props) {
   const BUTTON_NAME = "FILTER & SAVE";
   const FILTER_WORD_HELPER_TEXT = "Entry required.";
-  const CHECKBOX_LABEL = "Only content after de keyword";
+  const CHECKBOX_LABEL = "Only content after the keyword";
   const [renderFiles, setRenderFiles] = useState(false);
   const [inputError, setInputError] = useState(false);
   const [check, setCheck] = useState(false);
