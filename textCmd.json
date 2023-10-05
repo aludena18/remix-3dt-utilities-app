@@ -1,1 +1,1 @@
-[{"date":"Sat Sep 30 2023 01:17:28 GMT-0500 (Peru Standard Time)","device":"Teltonika","commandStr":"setparam 11000:3","commandHex":"00 00 00 00 00 00 00 1A 0C 01 05 00 00 00 12 73 65 74 70 61 72 61 6D 20 31 31 30 30 30 3A 33 0D 0A 01 00 00 6C 94"}]
+[{"date":"Wed Oct 04 2023 14:46:39 GMT-0500 (Peru Standard Time)","device":"Teltonika","commandStr":"setparam 101:2","commandHex":"00 00 00 00 00 00 00 18 0C 01 05 00 00 00 10 73 65 74 70 61 72 61 6D 20 31 30 31 3A 32 0D 0A 01 00 00 9B 4E"}]

@@ -26,6 +26,7 @@ export default function DropzoneForm(props) {
   const onDrop = useCallback((acceptedFiles) => {
     console.log("a file has been drooped");
     console.log(acceptedFiles);
+
     const filesData = [];
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();

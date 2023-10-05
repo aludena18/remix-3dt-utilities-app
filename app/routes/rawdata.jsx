@@ -12,6 +12,7 @@ export const meta = () => {
 };
 
 export default function RawdataRoute() {
+  const FILE_NAME_COMPLEMENT = "_";
   const [readyToSave, setreadyToSave] = useState(false);
 
   const saveFile = function (dataFiltered) {
@@ -26,7 +27,7 @@ export default function RawdataRoute() {
       });
       const fileUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `rawData_${file.name}`;
+      link.download = `${FILE_NAME_COMPLEMENT}${file.name}`;
       link.href = fileUrl;
       link.click();
       URL.revokeObjectURL(link.href);
