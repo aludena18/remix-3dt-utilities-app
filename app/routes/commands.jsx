@@ -5,13 +5,11 @@ import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Introduction from "../components/introduction/introduction";
-import {
-  getCommandHex,
-  getData,
-  setData,
-  getDeviceName,
-} from "../data/serverHelpers";
+import { getCommandHex, getDeviceName } from "../data/serverHelpers";
 import * as config from "../data/config.js";
+import { getUser, setCommandToUser } from "../utils/db.server";
+
+const USER_NAME = "aludena";
 
 export const meta = () => {
   return [{ title: config.tabTitle }];
@@ -43,7 +41,11 @@ export default function CommandsRoute() {
             }}
           >
             <SimpleForm setCmd={handleSetCmd} />
-            <BoxResult sx={{ mt: 2 }} data={data[0]} show={showResult} />
+            <BoxResult
+              sx={{ mt: 2 }}
+              data={data.slice(-1)[0]}
+              show={showResult}
+            />
           </Paper>
         </Grid>
       </Grid>
@@ -51,31 +53,29 @@ export default function CommandsRoute() {
   );
 }
 
-// Backend
+// Backend functions ---------------------------
+
+// Action
 export async function action({ request }) {
   const formData = await request.formData();
   const commandStr = formData.get("command");
   const deviceId = formData.get("device");
   const commandHex = getCommandHex(deviceId, commandStr);
 
-  // Saving the command
-  await setData(
-    [
-      {
-        date: new Date().toString(),
-        device: getDeviceName(+deviceId),
-        commandStr: commandStr,
-        commandHex: commandHex,
-      },
-    ],
-    "textCmd.json"
-  );
+  const command = {
+    date: new Date().toString(),
+    device: getDeviceName(+deviceId),
+    command: commandStr,
+    hexCommand: commandHex,
+  };
+  await setCommandToUser(USER_NAME, command);
 
-  // Redirect
   return redirect("/commands");
 }
 
+// Loader
 export async function loader() {
-  const data = await getData("textCmd.json");
+  const user = await getUser(USER_NAME);
+  const data = user.commands;
   return data;
 }

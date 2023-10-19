@@ -6,9 +6,9 @@ export default function boxResult(props) {
       <Box>
         <Typography variant="body2">Last request: {props.data.date}</Typography>
         <Typography variant="body2">Device: {props.data.device}</Typography>
-        <Typography variant="body2">Comand: {props.data.commandStr}</Typography>
+        <Typography variant="body2">Comand: {props.data.command}</Typography>
         <Typography variant="body2">
-          Comand Hex: {props.data.commandHex}
+          {"Command (Hex)"} : {props.data.hexCommand}
         </Typography>
       </Box>
     );

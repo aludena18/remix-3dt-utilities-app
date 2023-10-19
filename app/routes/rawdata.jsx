@@ -71,33 +71,3 @@ export default function RawdataRoute() {
     </Container>
   );
 }
-
-/*
-export async function action({ request }) {
-  const formData = await request.formData();
-
-  // Filtering the data
-  const filesDataStr = formData.get("files");
-  const filesData = JSON.parse(filesDataStr);
-  const filesDataFiltered = filesData.map((fileData) => {
-    const contentFiltered = fileData.content
-      .split(/\r\n|\n/)
-      .filter((frame) => frame.includes("Rec"))
-      .map((line) => line.split(">")[1])
-      .join("\r\n");
-    return { name: fileData.name, content: contentFiltered };
-  });
-  console.log(filesDataFiltered.length, " files filtered");
-
-  // Saving the data filtered
-  await setData(filesDataFiltered, "text.json");
-
-  // Redirect
-  return redirect("/rawdata");
-}
-
-export async function loader() {
-  const data = await getData("text.json");
-  return data;
-}
-*/

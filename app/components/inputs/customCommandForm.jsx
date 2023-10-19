@@ -21,7 +21,7 @@ export default function CustomCommandForm(props) {
       setCmdEmptyErr(true);
       return;
     }
-    console.log("submitted");
+    // console.log("submitted");
 
     // Copy the content to the hidden input
     const commandHiddenEl = document.getElementById("frm-command");
