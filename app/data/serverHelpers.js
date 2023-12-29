@@ -1,4 +1,9 @@
-import { numToFixedSizeArr, getCRC16, crc16ccitt } from "./helpers";
+import {
+  numToFixedSizeArr,
+  crc16_ibm,
+  crc16_ccitt,
+  crc16_x25,
+} from "./helpers";
 import fs from "fs/promises";
 import { devicesList } from "./config";
 
@@ -43,7 +48,7 @@ export const teltonikaCommand = function (commandStr) {
   const dataSize = numToFixedSizeArr(data.length, 4);
 
   const dataBytes = data.map((char) => parseInt(char, 16));
-  const crc16 = numToFixedSizeArr(getCRC16(dataBytes), 4);
+  const crc16 = numToFixedSizeArr(crc16_ibm(dataBytes), 4);
 
   const commandMessage = [...preamble, ...dataSize, ...data, ...crc16]
     .map((char) => char.toUpperCase())
@@ -61,9 +66,55 @@ export const ruptelaCommand = function (commandStr) {
   const packetLength = numToFixedSizeArr(data.length, 2);
 
   const dataBytes = data.map((char) => parseInt(char, 16));
-  const crc16 = numToFixedSizeArr(crc16ccitt(dataBytes), 2);
+  const crc16 = numToFixedSizeArr(crc16_ccitt(dataBytes), 2);
 
   const commandMessage = [...packetLength, ...data, ...crc16]
+    .map((char) => char.toUpperCase())
+    .join(" ");
+
+  return commandMessage;
+};
+
+// Concox command
+export const concoxCommand = function (commandStr) {
+  const startBit = ["78", "78"];
+  const protocolNumber = ["80"];
+  const serverFlagBit = ["00", "00", "00", "01"];
+  const infSerialNumber = ["00", "00"];
+  const stop = ["0D", "0A"];
+
+  const commandContent = commandStr
+    .split("")
+    .map((char) => char.charCodeAt(0).toString(16));
+
+  const commandLength = numToFixedSizeArr(
+    commandContent.length + serverFlagBit.length,
+    1
+  );
+
+  const packetLength = numToFixedSizeArr(
+    protocolNumber.length +
+      commandLength.length +
+      serverFlagBit.length +
+      commandContent.length +
+      infSerialNumber.length +
+      2,
+    1
+  );
+
+  const data = [
+    ...packetLength,
+    ...protocolNumber,
+    ...commandLength,
+    ...serverFlagBit,
+    ...commandContent,
+    ...infSerialNumber,
+  ];
+
+  const dataBytes = data.map((char) => parseInt(char, 16));
+  const crc16 = numToFixedSizeArr(crc16_x25(dataBytes), 2);
+
+  const commandMessage = [...startBit, ...data, ...crc16, ...stop]
     .map((char) => char.toUpperCase())
     .join(" ");
 
@@ -79,6 +130,9 @@ export const getCommandHex = function (device, commandStr) {
     case 1:
       console.log("Ruptela");
       return ruptelaCommand(commandStr);
+    case 2:
+      console.log("Concox");
+      return concoxCommand(commandStr);
 
     default:
       return "";

@@ -19,4 +19,4 @@ export const sections = {
 export const tabTitle = "Utilities";
 
 // List fot the basicSelectMenu component
-export const devicesList = ["Teltonika", "Ruptela"];
+export const devicesList = ["Teltonika", "Ruptela", "Concox"];

@@ -4,8 +4,6 @@ import { User } from "./model";
 const DB_CLOUD_URI = process.env.CONNECTION_STRING;
 
 //DB Config
-// const uri =
-//   "mongodb+srv://abel-admin:200211420@cluster0.atijvsm.mongodb.net/utilitiesDB";
 const uri = DB_CLOUD_URI;
 mongoose.set("strictQuery", false);
 mongoose.connect(uri);
@@ -22,7 +20,7 @@ export const getUser = async function (userName) {
 
 export const setCommandToUser = async function (userName, command) {
   const user = await User.findOne({ userName: userName });
-  console.log(user);
+  // console.log(user);
   user.commands.push(command);
   user.save();
 };

@@ -49,7 +49,7 @@ export const crc16ccitt = (regInit, message) => {
 
   if (typeof message === "string") {
     message = message.split("").map((c) => c.charCodeAt(0));
-    console.log(message);
+    // console.log(message);
   }
 
   // Binary input reverse
@@ -71,6 +71,102 @@ export const crc16ccitt = (regInit, message) => {
 
   // Binary output reverse
   const output = mirror_nbits(16, crc);
+
+  return output;
+};
+
+// Return CRC 16 CCITT - https://www.lddgo.net/en/encrypt/crc
+export const crc16_ccitt = (message) => {
+  // console.log(message);
+  const polynomial = 0x1021;
+  const initialValue = 0x0000;
+  const reverseRefIn = true;
+  const reverseRefOut = true;
+
+  // Binary input reverse
+  const binArrInput = reverseRefIn
+    ? message.map((num) => mirror_nbits(8, num))
+    : message;
+  const input = binArrInput;
+
+  let crc = initialValue + 0;
+  for (const b of input) {
+    for (let i = 0; i < 8; i++) {
+      const bit = ((b >> (7 - i)) & 1) === 1;
+      const c15 = ((crc >> 15) & 1) === 1;
+      crc <<= 1;
+      if (c15 ^ bit) crc ^= polynomial;
+    }
+  }
+  crc &= 0xffff;
+
+  // Binary output reverse
+  const output = reverseRefOut ? mirror_nbits(16, crc) : crc;
+
+  return output;
+};
+
+// Return CRC 16 IBM - https://www.lddgo.net/en/encrypt/crc
+export const crc16_ibm = (message) => {
+  // console.log(message);
+  const polynomial = 0x8005;
+  const initialValue = 0x0000;
+  const reverseRefIn = true;
+  const reverseRefOut = true;
+
+  // Binary input reverse
+  const binArrInput = reverseRefIn
+    ? message.map((num) => mirror_nbits(8, num))
+    : message;
+  const input = binArrInput;
+
+  let crc = initialValue + 0;
+  for (const b of input) {
+    for (let i = 0; i < 8; i++) {
+      const bit = ((b >> (7 - i)) & 1) === 1;
+      const c15 = ((crc >> 15) & 1) === 1;
+      crc <<= 1;
+      if (c15 ^ bit) crc ^= polynomial;
+    }
+  }
+  crc &= 0xffff;
+
+  // Binary output reverse
+  const output = reverseRefOut ? mirror_nbits(16, crc) : crc;
+
+  return output;
+};
+
+// Return CRC 16 X25 - https://www.lddgo.net/en/encrypt/crc
+export const crc16_x25 = (message) => {
+  const polynomial = 0x1021;
+  const initialValue = 0xffff;
+  const xorOut = 0xffff;
+  const reverseRefIn = true;
+  const reverseRefOut = true;
+
+  // Binary input reverse
+  const binArrInput = reverseRefIn
+    ? message.map((num) => mirror_nbits(8, num))
+    : message;
+  const input = binArrInput;
+
+  let crc = initialValue + 0;
+  for (const b of input) {
+    for (let i = 0; i < 8; i++) {
+      const bit = ((b >> (7 - i)) & 1) === 1;
+      const c15 = ((crc >> 15) & 1) === 1;
+      crc <<= 1;
+      if (c15 ^ bit) crc ^= polynomial;
+    }
+  }
+  crc &= 0xffff;
+
+  // Xor output
+  const xorOutCrc = xorOut ^ crc;
+
+  // Binary output reverse
+  const output = reverseRefOut ? mirror_nbits(16, xorOutCrc) : xorOutCrc;
 
   return output;
 };
