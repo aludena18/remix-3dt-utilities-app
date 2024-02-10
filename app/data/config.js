@@ -14,9 +14,22 @@ export const sections = {
     description:
       "This utility will help you to convert a gps tracker device command to its hexadecimal format in order to be sent over GPRS. The devices supported are listed in the drop down menu. For more information about the hexadecimal structure, visit each device's website and search for the command section",
   },
+  calculators: {
+    title: "Calculators",
+    description:
+      "This utility is meant to calculate the CRC (cyclic redundancy check) from a hexadecimal data string. There is a list of calculators depending on the algorithm needed. Please introduce the hexadecimal data string including one space between the bytes. \nExample: E0 94 5D 09 DC 05 03 00 DA 0A 53",
+  },
 };
 
 export const tabTitle = "Utilities";
 
-// List fot the basicSelectMenu component
+// List of devices fot the basicSelectMenu component
 export const devicesList = ["Teltonika", "Ruptela", "Concox"];
+
+// List of calculators fot the basicSelectMenu component
+export const calculatorsList = [
+  "Fletcher 16 (Digital Matter)",
+  "CRC 16 CCITT",
+  "CRC 16 IBM",
+  "CRC 16 X25",
+];

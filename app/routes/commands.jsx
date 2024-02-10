@@ -1,12 +1,13 @@
 import { Container, Grid, Paper } from "@mui/material";
-import SimpleForm from "../components/inputs/customCommandForm";
-import BoxResult from "../components/outputs/boxResult";
+import { useState } from "react";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+
+import * as config from "../data/config.js";
+import SimpleForm from "../components/inputs/customCommandForm";
+import BoxResult from "../components/outputs/boxResult";
 import Introduction from "../components/introduction/introduction";
 import { getCommandHex, getDeviceName } from "../data/serverHelpers";
-import * as config from "../data/config.js";
 import { getUser, setCommandToUser } from "../utils/db.server";
 
 const USER_NAME = "aludena";
@@ -17,6 +18,13 @@ export const meta = () => {
 
 export default function CommandsRoute() {
   const data = useLoaderData();
+  const lastReq = data.slice(-1)[0];
+  const dataToShow = [
+    { label: "Last Request", value: lastReq.date },
+    { label: "Device", value: lastReq.device },
+    { label: "Command", value: lastReq.command },
+    { label: "Command (Hex)", value: lastReq.hexCommand },
+  ];
   const [showResult, setShowResult] = useState(false);
 
   const handleSetCmd = function () {
@@ -40,12 +48,14 @@ export default function CommandsRoute() {
               // height: 280,
             }}
           >
-            <SimpleForm setCmd={handleSetCmd} />
-            <BoxResult
-              sx={{ mt: 2 }}
-              data={data.slice(-1)[0]}
-              show={showResult}
+            <SimpleForm
+              setCmd={handleSetCmd}
+              setDropDownLabel={"Device"}
+              setDropDownList={config.devicesList}
+              setInputLabel={"Command"}
+              setButtonLabel={"try it out"}
             />
+            <BoxResult sx={{ mt: 2 }} data={dataToShow} show={showResult} />
           </Paper>
         </Grid>
       </Grid>

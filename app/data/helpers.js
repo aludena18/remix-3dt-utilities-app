@@ -180,3 +180,31 @@ function mirror_nbits(digits, n) {
   }
   return parseInt(t.reverse().join(""), 2);
 }
+
+// Fletcher Checksum - Digital Matter Oyster 3
+export function fletcherDM(dataArr) {
+  let sum1 = 0;
+  let sum2 = 0;
+  for (let i = 0; i < dataArr.length; i++) {
+    sum1 = (sum1 + dataArr[i]) % 256;
+    sum2 = (sum2 + sum1) % 256;
+  }
+  let check1 = 256 - ((sum1 + sum2) % 256);
+  let check2 = 256 - ((sum1 + check1) % 256);
+
+  const output = (check1 << 8) | check2;
+  return output;
+}
+
+// https://en.wikipedia.org/wiki/Fletcher%27s_checksum
+export function fletcher16(dataArr) {
+  let sum1 = 0;
+  let sum2 = 0;
+
+  for (let index = 0; index < dataArr.length; index++) {
+    sum1 = (sum1 + dataArr[index]) % 255;
+    sum2 = (sum2 + sum1) % 255;
+  }
+  console.log(sum1, sum2);
+  return (sum2 << 8) | sum1;
+}

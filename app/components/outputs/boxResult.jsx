@@ -4,12 +4,11 @@ export default function boxResult(props) {
   const result = function () {
     return (
       <Box>
-        <Typography variant="body2">Last request: {props.data.date}</Typography>
-        <Typography variant="body2">Device: {props.data.device}</Typography>
-        <Typography variant="body2">Comand: {props.data.command}</Typography>
-        <Typography variant="body2">
-          {"Command (Hex)"} : {props.data.hexCommand}
-        </Typography>
+        {props.data.map((el, i) => (
+          <Typography key={i} variant="body2">
+            {el.label}: {el.value}
+          </Typography>
+        ))}
       </Box>
     );
   };

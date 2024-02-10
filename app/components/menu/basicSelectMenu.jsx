@@ -4,13 +4,13 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { devicesList } from "../../data/config";
 
 let _setDevice;
 
 export default function BasicSelectMenu(props) {
   const [device, setDevice] = React.useState("");
   _setDevice = setDevice;
+
   const handleChange = (event) => {
     setDevice(event.target.value);
     props.setDeviceId(event.target.value);
@@ -18,8 +18,10 @@ export default function BasicSelectMenu(props) {
 
   return (
     <Box sx={props.sx}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Device</InputLabel>
+      <FormControl fullWidth error={props.selectError}>
+        <InputLabel id="demo-simple-select-label">
+          {props.setDropDownLabel}
+        </InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
@@ -29,7 +31,7 @@ export default function BasicSelectMenu(props) {
         >
           {/* <MenuItem value={1}>Teltonika</MenuItem>
           <MenuItem value={2}>Ruptela</MenuItem> */}
-          {devicesList.map((device, i) => (
+          {props.setDropDownList.map((device, i) => (
             <MenuItem key={i} value={i}>
               {device}
             </MenuItem>
